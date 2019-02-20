@@ -406,9 +406,10 @@ def parseOptions():
                          help='Grid to use (case sensitive; options are BookGrid, BridgeGrid, CliffGrid, MazeGrid, default %default)' )
     optParser.add_option('-w', '--windowSize', metavar="X", type='int',dest='gridSize',default=150,
                          help='Request a window width of X pixels *per grid cell* (default %default)')
+    #MODIFICATION LUCIA
     optParser.add_option('-a', '--agent',action='store', metavar="A",
                          type='string',dest='agent',default="random",
-                         help='Agent type (options are \'random\', \'value\', \'sarsa\' and \'q\', default %default)')
+                         help='Agent type (options are \'random\', \'value\', \'td0\', \'sarsa\' and \'q\', default %default)')
     optParser.add_option('-t', '--text',action='store_true',
                          dest='textDisplay',default=False,
                          help='Use text-only ASCII display')
@@ -486,7 +487,7 @@ if __name__ == '__main__':
     # GET THE AGENT
     ###########################
 
-    import valueIterationAgents, qlearningAgents, sarsaLearningAgents
+    import valueIterationAgents, qlearningAgents, sarsaLearningAgents, td0Agents
     a = None
     if opts.agent == 'value':
         a = valueIterationAgents.ValueIterationAgent(mdp, opts.discount, opts.iters)
@@ -514,6 +515,16 @@ if __name__ == '__main__':
                       'epsilon': opts.epsilon,
                       'actionFn': actionFn}
         a = sarsaLearningAgents.sarsaLearningAgent(**sarsaLearnOpts) 
+
+    #The policy to evalueate for td0 will be epsilon-greedy
+    elif opts.agent == 'td0':
+    	gridWorldEnv = GridworldEnvironment(mdp)
+        actionFn = lambda state: mdp.getPossibleActions(state)
+        td0StimationOpts = {'gamma': opts.discount,
+                      'alpha': opts.learningRate,
+                      'epsilon': opts.epsilon,
+                      'actionFn': actionFn}
+        a = td0Agents.td0Agent(**td0StimationOpts)
 
 
     #########################################################################################
@@ -572,6 +583,7 @@ if __name__ == '__main__':
             if opts.agent == 'q': displayCallback = lambda state: display.displayQValues(a, state, "CURRENT Q-VALUES")
             #MODIFICATION LUCIA
             if opts.agent == 'sarsa': displayCallback = lambda state: display.displayQValues(a, state, "CURRENT Q-VALUES")
+            if opts.agent == 'td0': displayCallback = lambda state: display.displayValues(a, state, "CURRENT VALUES")
 
     messageCallback = lambda x: printString(x)
     if opts.quiet:
@@ -612,11 +624,22 @@ if __name__ == '__main__':
         except KeyboardInterrupt:
             sys.exit(0)
 
+    # MODIFICATION LUCIA
     # DISPLAY POST-LEARNING VALUES / Q-VALUES FOR SARSA
     if opts.agent == 'sarsa' and not opts.manual:
         try:
             display.displayQValues(a, message = "Q-VALUES AFTER "+str(opts.episodes)+" EPISODES")
             display.pause()
+            display.displayValues(a, message = "VALUES AFTER "+str(opts.episodes)+" EPISODES")
+            display.pause()
+        except KeyboardInterrupt:
+            sys.exit(0)
+
+
+    if opts.agent == 'td0' and not opts.manual:
+        try:
+            #display.displayQValues(a, message = "Q-VALUES AFTER "+str(opts.episodes)+" EPISODES")
+            #display.pause()
             display.displayValues(a, message = "VALUES AFTER "+str(opts.episodes)+" EPISODES")
             display.pause()
         except KeyboardInterrupt:
