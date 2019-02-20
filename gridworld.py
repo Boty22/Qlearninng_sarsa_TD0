@@ -438,13 +438,6 @@ def parseOptions():
             print '## Disabling Agents in Manual Mode (-m) ##'
             opts.agent = None
 
-        '''
-        if opts.agent != 'sarsa':
-    
-            print '## Disabling Agents in Manual Mode (-m) ##'
-            opts.agent = None
-        '''
-
 
 
     # MANAGE CONFLICTS
@@ -577,6 +570,8 @@ if __name__ == '__main__':
             if opts.agent == 'random': displayCallback = lambda state: display.displayValues(a, state, "CURRENT VALUES")
             if opts.agent == 'value': displayCallback = lambda state: display.displayValues(a, state, "CURRENT VALUES")
             if opts.agent == 'q': displayCallback = lambda state: display.displayQValues(a, state, "CURRENT Q-VALUES")
+            #MODIFICATION LUCIA
+            if opts.agent == 'sarsa': displayCallback = lambda state: display.displayQValues(a, state, "CURRENT Q-VALUES")
 
     messageCallback = lambda x: printString(x)
     if opts.quiet:
@@ -607,8 +602,18 @@ if __name__ == '__main__':
         print
         print
 
-    # DISPLAY POST-LEARNING VALUES / Q-VALUES
+    # DISPLAY POST-LEARNING VALUES / Q-VALUES FOR Q-LEARNING
     if opts.agent == 'q' and not opts.manual:
+        try:
+            display.displayQValues(a, message = "Q-VALUES AFTER "+str(opts.episodes)+" EPISODES")
+            display.pause()
+            display.displayValues(a, message = "VALUES AFTER "+str(opts.episodes)+" EPISODES")
+            display.pause()
+        except KeyboardInterrupt:
+            sys.exit(0)
+
+    # DISPLAY POST-LEARNING VALUES / Q-VALUES FOR SARSA
+    if opts.agent == 'sarsa' and not opts.manual:
         try:
             display.displayQValues(a, message = "Q-VALUES AFTER "+str(opts.episodes)+" EPISODES")
             display.pause()

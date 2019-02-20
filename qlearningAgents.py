@@ -143,7 +143,7 @@ class QLearningAgent(ReinforcementAgent):
 
 
         #For sarsa
-        '''
+        
         next_action = self.computeActionFromQValues(nextState)
         q_next_state_on_policy = self.getQValue(nextState, next_action) 
 
@@ -154,7 +154,12 @@ class QLearningAgent(ReinforcementAgent):
         print "reward" , reward                              
         print  "current state", self.getQValue(state, action)
         #print 
-        
+        '''
+
+
+        q_max = self.computeValueFromQValues(nextState) 
+        self.q[ (state, action) ] = (1-self.alpha) * self.getQValue(state,action)+ \
+                                      self.alpha*(reward +  self.discount * q_max)
 
         #util.raiseNotDefined()
 
