@@ -2,7 +2,8 @@
 ## Introduction
 Games are experimental systems for Artificial Intelligence. They allow AI scientists to compare algorithms and set baselines for performance. The AI community continuously implements games as learning environments. 
 
-UC Berkeley course [CS188](https://inst.eecs.berkeley.edu/~cs188/sp19/), Introduction to Artificial Intelligence, uses the game Pac-Man and a simplied version of the environment called GridWorld. As part of the course, the project 3 reques the implementation of Dynamic programing methods (Value/Policy Iteration) and one reinforcement learning method(Q-Learning).
+UC Berkeley course [CS188](https://inst.eecs.berkeley.edu/~cs188/sp19/), Introduction to Artificial Intelligence, uses the game Pac-Man and a simplified version of the environment called GridWorld. As part of the course, the project 3 requests the implementation of Dynamic Programming methods (Value/Policy Iteration) and one Reinforcement Learning method (Q-Learning).
+
 I have expanded the required work and implemented two additional reinforcement learning methods: TD-0 an Sarsa.
 
 ## Notes on the Reinforcement Learning Environment
